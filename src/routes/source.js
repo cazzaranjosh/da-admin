@@ -9,13 +9,21 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-export default function getS3Config(env) {
-  return {
-    region: 'auto',
-    endpoint: env.S3_DEF_URL,
-    credentials: {
-      accessKeyId: env.S3_ACCESS_KEY_ID,
-      secretAccessKey: env.S3_SECRET_ACCESS_KEY,
-    },
-  };
+import getObject from '../storage/object/get.js';
+import putObject from '../storage/object/put.js';
+import deleteObject from '../storage/object/delete.js';
+
+import putHelper from '../helpers/source.js';
+
+export async function deleteSource({ env, daCtx }) {
+  return deleteObject(env, daCtx);
+}
+
+export async function postSource({ req, env, daCtx }) {
+  const obj = await putHelper(req, env, daCtx);
+  return putObject(env, daCtx, obj);
+}
+
+export async function getSource({ env, daCtx }) {
+  return getObject(env, daCtx);
 }

@@ -9,13 +9,20 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-export default function getS3Config(env) {
-  return {
-    region: 'auto',
-    endpoint: env.S3_DEF_URL,
-    credentials: {
-      accessKeyId: env.S3_ACCESS_KEY_ID,
-      secretAccessKey: env.S3_SECRET_ACCESS_KEY,
-    },
-  };
+export default function daResp({
+  status,
+  body = '',
+  contentType = 'application/json',
+  contentLength,
+}) {
+  const headers = new Headers();
+  headers.append('Access-Control-Allow-Origin', '*');
+  headers.append('Access-Control-Allow-Methods', 'HEAD, GET, PUT, POST, DELETE');
+  headers.append('Access-Control-Allow-Headers', '*');
+  headers.append('Content-Type', contentType);
+  if (contentLength) {
+    headers.append('Content-Length', contentLength);
+  }
+
+  return new Response(body, { status, headers });
 }

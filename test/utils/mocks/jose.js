@@ -9,13 +9,15 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-export default function getS3Config(env) {
+const decodeJwt = (token) => {
+  let [email, created_at = 0, expires_in = 0] = token.split(':');
+  created_at += Math.floor(new Date().getTime() / 1000);
+  expires_in += created_at;
   return {
-    region: 'auto',
-    endpoint: env.S3_DEF_URL,
-    credentials: {
-      accessKeyId: env.S3_ACCESS_KEY_ID,
-      secretAccessKey: env.S3_SECRET_ACCESS_KEY,
-    },
+    user_id: email,
+    created_at,
+    expires_in: expires_in || created_at + 1000,
   };
-}
+};
+
+export default { decodeJwt };

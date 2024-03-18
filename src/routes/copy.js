@@ -9,13 +9,14 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-export default function getS3Config(env) {
-  return {
-    region: 'auto',
-    endpoint: env.S3_DEF_URL,
-    credentials: {
-      accessKeyId: env.S3_ACCESS_KEY_ID,
-      secretAccessKey: env.S3_SECRET_ACCESS_KEY,
-    },
-  };
+import copyObject from '../storage/object/copy.js';
+import copyHelper from '../helpers/copy.js';
+
+export default async function copyHandler(req, env, daCtx) {
+  if (req.method === 'POST') {
+    const details = await copyHelper(req, daCtx);
+    return copyObject(env, daCtx, details);
+  }
+
+  return { body: JSON.stringify([]), status: 200, contentType: 'application/json' };
 }

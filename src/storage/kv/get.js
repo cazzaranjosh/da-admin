@@ -9,13 +9,9 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-export default function getS3Config(env) {
-  return {
-    region: 'auto',
-    endpoint: env.S3_DEF_URL,
-    credentials: {
-      accessKeyId: env.S3_ACCESS_KEY_ID,
-      secretAccessKey: env.S3_SECRET_ACCESS_KEY,
-    },
-  };
+
+export default async function getKv(env, daCtx) {
+  const body = await env.DA_CONFIG.get(daCtx.fullKey);
+  if (body) return { body, status: 200 };
+  return { body: JSON.stringify({ error: 'not found' }), status: 404 };
 }
